@@ -14,6 +14,9 @@ Get this
 
 ![150x150](https://cloud.githubusercontent.com/assets/3915598/20328187/371ce06c-ab35-11e6-9720-adfbce08755b.png)
 
+## caveats
+Only images 150x150 will work. Any higher is at your own risk. if nothing works, make an issue!
+
 ## usage
 
 Send a `POST` request to the
