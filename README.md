@@ -18,7 +18,17 @@ Get this
 
 Send a `POST` request to the
 
+**javascript**
 
+```javascript
+
+const Request = require('request')
+const WriteFile = require('fs').createWriteStream
+
+Request.get('https://circle-image-as-a-service-vyovctikeu.now.sh')
+  .pipe(WriteFile('./downloads/'))
+
+```
 
 **curl**
 
