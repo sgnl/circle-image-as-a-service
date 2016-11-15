@@ -1,4 +1,3 @@
-uploads
-
+**/*.png
 node_modules
 *.log

@@ -56,7 +56,7 @@ App
     .on('finish', _ => next())
 })
 .use((req, res, next) => {
-  let CircleImage = require('circle-image')({
+  let CircleImage = require('@sgnl/circle-image')({
     tempDir,
     outputDir: uploadDir,
     filename: req.body.filename
