@@ -13,7 +13,7 @@ const downloadDir = 'download'
     , tempDir = 'temp'
     , uploadDir = 'uploads'
 
-const imageSizes = [30]
+const imageSizes = [120]
 
 const Gm = require('gm')
 
@@ -71,7 +71,7 @@ App
 
   let fileLocation = `${downloadDir}/${req.body.filename}`
   console.log('fileLocation : ', fileLocation  );
-  CircleImage(fileLocation, '', [120]).then(function (paths) {
+  CircleImage(fileLocation, '', imageSizes).then(function (paths) {
     console.log('paths[0]: ', paths[0]);
     res.sendFile(Path.resolve(fileLocation))
   })
