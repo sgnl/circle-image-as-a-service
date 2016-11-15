@@ -4,9 +4,14 @@ const Express = require('express')
 
     , WriteFile = require('fs').createWriteStream
     , Request = require('request')
-    , CircleImage = require('circle-image')
 
-const uploadDir = 'uploads'
+const downloadDir = 'download'
+    , tempDir = 'temp'
+    , uploadDir = 'uploads'
+
+const imageSizes = [30]
+
+const Gm = require('gm')
 
 App
 .use(BodyParser.json())
@@ -15,53 +20,57 @@ App
 
   // check payload
   if (!req.body.hasOwnProperty('url')) {
-    return res.send(422, 'payload missing key: url')
+    return res.status(422).send('payload missing key: url')
   }
 
   // pattern match for filename including file type extension
   let pattern = req.body.url.match(/([\w+\.]+)(\.\w+)$/)
 
   if (!pattern) {
-    return res.send(422, 'no extension found in url')
+    return res.status(422).send('no extension found in url')
   }
 
-  let [ filename
-  , _
+  let [ fileNameAndExtension
+  , filename
   , extension
   ] = pattern
 
   // check if valid file type
   let validFileTypes = ['.jpg', '.gif', '.jpeg', '.png']
 
-  if (!!~validFileTypes.indexOf(extension)) {
-    return res.send(422, 'not a supported file type')
+  if (!validFileTypes.includes(extension)) {
+    return res.status(422).send('not a supported file type')
   }
 
   // yay \o/
-  req.body.filename = filename
-  req.body.extension = extension
+  req.body.filename = `${filename}.png`
+  req.body.filepath = `${downloadDir}/${req.body.filename}`
+
   return next()
 })
 .use((req, res, next) => {
-  Request
-    .get(req.body.url)
-    .on('response', (response) => {
-      console.log(response.statusCode) // 200
-      console.log(response.headers['content-type']) // 'image/png'
-    })
-    .on('error', (error) => handleError(error))
-    .pipe(WriteFile(`${uploadDir}/${req.body.filename}`))
-    .on('error', (error) => handleError(error))
+  Gm(Request.get(req.body.url))
+    .stream('png')
+    .pipe(WriteFile(`${downloadDir}/${req.body.filename}`))
+    .on('error', (error) => handleError(res, error))
     .on('finish', _ => next())
 })
 .use((req, res, next) => {
-
+  let CircleImage = require('circle-image')({
+    tempDir,
+    outputDir: uploadDir,
+    filename: req.body.filename
+  })
+  CircleImage(`${downloadDir}/${req.body.filename}`, '', [120]).then(function (paths) {
+    console.log(paths);
+  })
+  .catch((error) => console.error(error))
 })
 .post('/', (req, res) => {
   res.send('although we\'ve come to the end of the road')
 })
 .listen(6565)
 
-const handError = function handleError(error){
-  return res.send(500, error)
+function handleError(res, error){
+  return res.status(500).send(error)
 }
