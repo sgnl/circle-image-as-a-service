@@ -6,6 +6,8 @@ const Express = require('express')
     , Request = require('request')
     , CircleImage = require('circle-image')
 
+const uploadDir = 'uploads'
+
 App
 .use(BodyParser.json())
 // validate payload
@@ -40,15 +42,26 @@ App
   req.body.extension = extension
   return next()
 })
-.post('/', (req, res) => {
-  console.log('body', req.body)
+.use((req, res, next) => {
   Request
     .get(req.body.url)
     .on('response', (response) => {
       console.log(response.statusCode) // 200
       console.log(response.headers['content-type']) // 'image/png'
     })
-    // .pipe(WriteFile(`./uploads/`))
-  res.send('works')
+    .on('error', (error) => handleError(error))
+    .pipe(WriteFile(`${uploadDir}/${req.body.filename}`))
+    .on('error', (error) => handleError(error))
+    .on('finish', _ => next())
+})
+.use((req, res, next) => {
+
+})
+.post('/', (req, res) => {
+  res.send('although we\'ve come to the end of the road')
 })
 .listen(6565)
+
+const handError = function handleError(error){
+  return res.send(500, error)
+}
