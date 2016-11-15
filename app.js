@@ -1,3 +1,6 @@
+
+'use strict';
+
 const Express = require('express')
     , App = Express()
     , BodyParser = require('body-parser')
