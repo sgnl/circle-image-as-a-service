@@ -4,7 +4,7 @@
 # deployed @ https://circle-image-as-a-service-vyovctikeu.now.sh
 ```
 
-`POST` a url to the server, get a rounded image back. Powered by [now](https://ziet.co/now).
+`POST` a url to the server, get a rounded image back. Powered by [now](https://zeit.co/now).
 
 Send this
 
