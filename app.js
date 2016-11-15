@@ -3,6 +3,7 @@ const Express = require('express')
     , BodyParser = require('body-parser')
 
     , WriteFile = require('fs').createWriteStream
+    , Path = require('path')
     , Request = require('request')
 
 const downloadDir = 'download'
@@ -15,6 +16,7 @@ const Gm = require('gm')
 
 App
 .use(BodyParser.json())
+
 // validate payload
 .use((req, res, next) => {
 
@@ -48,6 +50,7 @@ App
 
   return next()
 })
+
 .use((req, res, next) => {
   Gm(Request.get(req.body.url))
     .stream('png')
@@ -55,20 +58,27 @@ App
     .on('error', (error) => handleError(res, error))
     .on('finish', _ => next())
 })
+
 .use((req, res, next) => {
   let CircleImage = require('@sgnl/circle-image')({
     tempDir,
     outputDir: uploadDir,
     filename: req.body.filename
   })
-  CircleImage(`${downloadDir}/${req.body.filename}`, '', [120]).then(function (paths) {
-    console.log(paths);
+
+  let fileLocation = `${downloadDir}/${req.body.filename}`
+  console.log('fileLocation : ', fileLocation  );
+  CircleImage(fileLocation, '', [120]).then(function (paths) {
+    console.log('paths[0]: ', paths[0]);
+    res.sendFile(Path.resolve(fileLocation))
   })
   .catch((error) => console.error(error))
 })
+
 .post('/', (req, res) => {
   res.send('although we\'ve come to the end of the road')
 })
+
 .listen(6565)
 
 function handleError(res, error){
