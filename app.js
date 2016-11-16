@@ -3,7 +3,6 @@
 
 const Express = require('express')
     , App = Express()
-    , BodyParser = require('body-parser')
 
     , WriteFile = require('fs').createWriteStream
     , Path = require('path')
@@ -18,19 +17,18 @@ const imageSizes = [120]
 const Gm = require('gm')
 
 App
-.use(BodyParser.json())
 
 // validate payload
 .use((req, res, next) => {
 
   // check payload
-  if (!req.body.hasOwnProperty('url')) {
-    return res.status(422).send('payload missing key: url')
+  if (!req.query.url) {
+    return res.status(422).send('missing url query parameter: url')
   }
 
   // pattern match for filename including file type extension
-  let pattern = req.body.url.match(/([\w+\.]+)(\.\w+)$/)
-
+  let pattern = req.query.url.match(/([\w+\.\-]+)(\.\w+)$/)
+  console.log('pattern: ', pattern);
   if (!pattern) {
     return res.status(422).send('no extension found in url')
   }
@@ -48,16 +46,16 @@ App
   }
 
   // yay \o/
-  req.body.filename = `${filename}.png`
-  req.body.filepath = `${downloadDir}/${req.body.filename}`
+  req.filename = `${filename}.png`
+  req.filepath = `${downloadDir}/${req.filename}`
 
   return next()
 })
 
 .use((req, res, next) => {
-  Gm(Request.get(req.body.url))
+  Gm(Request.get(req.query.url))
     .stream('png')
-    .pipe(WriteFile(`${downloadDir}/${req.body.filename}`))
+    .pipe(WriteFile(`${downloadDir}/${req.filename}`))
     .on('error', (error) => handleError(res, error))
     .on('finish', _ => next())
 })
@@ -66,10 +64,10 @@ App
   let CircleImage = require('@sgnl/circle-image')({
     tempDir,
     outputDir: uploadDir,
-    filename: req.body.filename
+    filename: req.filename
   })
 
-  let fileLocation = `${downloadDir}/${req.body.filename}`
+  let fileLocation = `${downloadDir}/${req.filename}`
   console.log('fileLocation : ', fileLocation  );
   CircleImage(fileLocation, '', imageSizes).then(function (paths) {
     console.log('paths[0]: ', paths[0]);
