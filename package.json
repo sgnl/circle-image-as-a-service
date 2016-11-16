@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "xo && ava",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
@@ -13,9 +13,14 @@
   "license": "GNU Lesser General Public License v3 (LGPL-3.0)",
   "dependencies": {
     "@sgnl/circle-image": "^1.0.42",
+    "async": "^2.1.2",
     "express": "^4.14.0",
     "gm": "^1.23.0",
-    "nodemon": "^1.11.0",
     "request": "^2.78.0"
+  },
+  "devDependencies": {
+    "ava": "^0.16.0",
+    "nodemon": "^1.11.0",
+    "xo": "^0.17.1"
   }
 }
