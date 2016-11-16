@@ -8,7 +8,7 @@
 
 ![150x150](https://cloud.githubusercontent.com/assets/3915598/20328187/371ce06c-ab35-11e6-9720-adfbce08755b.png)
 
-**curently deployed at:** `https://circle-image-as-a-service-vyovctikeu.now.sh`
+**curently deployed at:** `https://circle-image-as-a-service-juuyhmkiiy.now.sh`
 
 `POST` a url to the server, get a rounded image back.
 
@@ -25,7 +25,7 @@ Only images 150x150 will work. Any higher is at your own risk. if nothing works,
 var request = require("request");
 
 var options = { method: 'GET',
-  url: 'https://circle-image-as-a-service-vyovctikeu.now.sh',
+  url: 'https://circle-image-as-a-service-juuyhmkiiy.now.sh',
   qs: { url: 'https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg' },
   headers: { 'cache-control': 'no-cache' }
 };
@@ -46,7 +46,7 @@ const Request = require('request')
 const WriteFile = require('fs').createWriteStream
 
 Request({
-  url: 'https://circle-image-as-a-service-vyovctikeu.now.sh',
+  url: 'https://circle-image-as-a-service-juuyhmkiiy.now.sh',
   method: 'POST',
   json: {
     url: 'https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg'
@@ -60,7 +60,7 @@ Request({
 
 ```bash
 
-curl -X GET -H "Cache-Control: no-cache" "http://localhost:8080/?url=https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg"
+curl -X GET -H "Cache-Control: no-cache" "https://circle-image-as-a-service-juuyhmkiiy.now.sh/?url=https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg"
 
 ```
 
