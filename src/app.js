@@ -17,6 +17,7 @@ const uploadDir = 'uploads';
 const imageSizes = [120];
 
 app.get('/version', (_, res) => {
+  console.log('hit version route');
   res.send(`version: ${process.env.npm_package_version}`);
 });
 
@@ -30,6 +31,7 @@ app.use('/',
     }
 
     // pattern match for filename including file type extension
+    // eslint-disable-next-line no-useless-escape
     const pattern = req.query.url.match(/([\w+\.\-]+)(\.\w+)$/);
 
     if (!pattern) {
@@ -88,8 +90,8 @@ app.use('/',
   })
 ;
 
-app.listen(process.env.PORT || 8181);
-
 function handleError(res, error) {
   return res.status(500).send(error);
 }
+
+export default app;
