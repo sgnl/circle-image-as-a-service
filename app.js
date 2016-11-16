@@ -1,97 +1,115 @@
-
 'use strict';
 
-const Express = require('express')
-    , App = Express()
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-    , { createWriteStream: WriteFile
-      , unlink: DeleteFile
-    } = require('fs')
-    , Path = require('path')
-    , Request = require('request')
+var _path = require('path');
 
-const downloadDir = 'download'
-    , tempDir = 'temp'
-    , uploadDir = 'uploads'
+var _path2 = _interopRequireDefault(_path);
 
-const imageSizes = [120]
+var _express = require('express');
 
-const Gm = require('gm')
+var _express2 = _interopRequireDefault(_express);
 
-App
+var _request = require('request');
+
+var _request2 = _interopRequireDefault(_request);
+
+var _gm = require('gm');
+
+var _gm2 = _interopRequireDefault(_gm);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var app = (0, _express2.default)();
+
+var _fs = 'fs',
+    writeFile = _fs.createWriteStream,
+    deleteFile = _fs.unlink;
+
+
+var downloadDir = 'download';
+var tempDir = 'temp';
+var uploadDir = 'uploads';
+var imageSizes = [120];
+
+app.get('/version', function (_, res) {
+  res.send('version: ' + process.env.npm_package_version);
+});
+
+// :sparkles:
+app.use('/',
 
 // validate payload
-.use((req, res, next) => {
-
-  // check payload
+function (req, res, next) {
   if (!req.query.url) {
-    return res.status(422).send('missing url query parameter: url')
+    return res.status(422).send('missing url query parameter: url');
   }
 
   // pattern match for filename including file type extension
-  let pattern = req.query.url.match(/([\w+\.\-]+)(\.\w+)$/)
-  console.log('pattern: ', pattern);
+  var pattern = req.query.url.match(/([\w+.-]+)(\.\w+)$/);
+
   if (!pattern) {
-    return res.status(422).send('no extension found in url')
+    return res.status(422).send('no extension found in url');
   }
 
-  let [ fileNameAndExtension
-  , filename
-  , extension
-  ] = pattern
+  var _pattern = _slicedToArray(pattern, 4),
+      _ = _pattern[0],
+      filename = _pattern[2],
+      extension = _pattern[3];
 
   // check if valid file type
-  let validFileTypes = ['.jpg', '.gif', '.jpeg', '.png']
+
+
+  var validFileTypes = ['.jpg', '.gif', '.jpeg', '.png'];
 
   if (!validFileTypes.includes(extension)) {
-    return res.status(422).send('not a supported file type')
+    return res.status(422).send('not a supported file type');
   }
 
   // yay \o/
-  req.filename = `${filename}.png`
-  req.filepath = `${downloadDir}/${req.filename}`
+  req.filename = filename + '.png';
+  req.filepath = downloadDir + '/' + req.filename;
 
-  return next()
-})
+  return next();
+},
 
-.use((req, res, next) => {
-  Gm(Request.get(req.query.url))
-    .stream('png')
-    .pipe(WriteFile(`${downloadDir}/${req.filename}`))
-    .on('error', (error) => handleError(res, error))
-    .on('finish', _ => next())
-})
+// download image, change to png
+function (req, res, next) {
+  (0, _gm2.default)(_request2.default.get(req.query.url)).stream('png').pipe(writeFile(downloadDir + '/' + req.filename)).on('error', function (error) {
+    return handleError(res, error);
+  }).on('finish', function () {
+    return next();
+  });
+},
 
-.use((req, res, next) => {
-  let CircleImage = require('@sgnl/circle-image')({
-    tempDir,
+// finally, make it a circle, send it back, and clean up.
+function (req, res) {
+  var circleImage = require('@sgnl/circle-image')({
+    tempDir: tempDir,
     outputDir: uploadDir,
     filename: req.filename
-  })
+  });
 
-  let fileLocation = `${downloadDir}/${req.filename}`
-  let tempFileLocation = `${tempDir}/${req.filename}`
+  var fileLocation = downloadDir + '/' + req.filename;
+  var tempFileLocation = tempDir + '/' + req.filename;
 
-  CircleImage(fileLocation, '', imageSizes).then(_ => {
-    res.sendFile(Path.resolve(fileLocation), (err) => {
+  circleImage(fileLocation, '', imageSizes).then(function () {
+    res.sendFile(_path2.default.resolve(fileLocation), function (err) {
       if (err) {
-        console.error(err)
-        res.status(err.status).end()
+        console.error(err);
+        res.status(err.status).end();
       } else {
-        DeleteFile(fileLocation)
-        DeleteFile(tempFileLocation)
+        deleteFile(fileLocation);
+        deleteFile(tempFileLocation);
       }
-    })
-  })
-  .catch((error) => console.error(error))
-})
+    });
+  }).catch(function (err) {
+    return console.error(err);
+  });
+});
 
-.post('/', (req, res) => {
-  res.send('although we\'ve come to the end of the road')
-})
+app.listen(process.env.PORT || 8181);
 
-.listen(process.env.PORT || 8181)
-
-function handleError(res, error){
-  return res.status(500).send(error)
+function handleError(res, error) {
+  return res.status(500).send(error);
 }
