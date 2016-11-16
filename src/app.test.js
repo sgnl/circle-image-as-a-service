@@ -11,7 +11,7 @@ test.beforeEach(t => {
 test.serial('version route', async t => {
   t.plan(2);
 
-  let res = await t.context.agent
+  const res = await t.context.agent
     .get('/version');
 
   t.is(res.status, 200);
