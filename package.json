@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "xo && ava",
+    "test": "xo src/app.js && ava",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "build": "babel src -d ."
   },
   "keywords": [],
   "author": "Ray Farias <rayrfarias@gmail.com> (http://github.com/sgnl)",
@@ -20,7 +21,13 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
     "nodemon": "^1.11.0",
     "xo": "^0.17.1"
+  },
+  "xo": {
+    "esnext": true,
+    "space": 2
   }
 }
