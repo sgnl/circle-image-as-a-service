@@ -4,7 +4,9 @@
 const Express = require('express')
     , App = Express()
 
-    , WriteFile = require('fs').createWriteStream
+    , { createWriteStream: WriteFile
+      , unlink: DeleteFile
+    } = require('fs')
     , Path = require('path')
     , Request = require('request')
 
@@ -68,10 +70,18 @@ App
   })
 
   let fileLocation = `${downloadDir}/${req.filename}`
-  console.log('fileLocation : ', fileLocation  );
-  CircleImage(fileLocation, '', imageSizes).then(function (paths) {
-    console.log('paths[0]: ', paths[0]);
-    res.sendFile(Path.resolve(fileLocation))
+  let tempFileLocation = `${tempDir}/${req.filename}`
+
+  CircleImage(fileLocation, '', imageSizes).then(_ => {
+    res.sendFile(Path.resolve(fileLocation), (err) => {
+      if (err) {
+        console.error(err)
+        res.status(err.status).end()
+      } else {
+        DeleteFile(fileLocation)
+        DeleteFile(tempFileLocation)
+      }
+    })
   })
   .catch((error) => console.error(error))
 })
