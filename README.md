@@ -1,16 +1,14 @@
 # circle image as a service
 
 **send this**
+
 ![eva-green-backgrounds-150x150](https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg)
 
 **get this**
+
 ![150x150](https://cloud.githubusercontent.com/assets/3915598/20328187/371ce06c-ab35-11e6-9720-adfbce08755b.png)
 
-**send where?**
-
-````
-https://circle-image-as-a-service-vyovctikeu.now.sh
-```
+**curently deployed at: ** `https://circle-image-as-a-service-vyovctikeu.now.sh`
 
 `POST` a url to the server, get a rounded image back. Powered by [now](https://zeit.co/now).
 
