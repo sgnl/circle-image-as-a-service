@@ -19,7 +19,26 @@ Only images 150x150 will work. Any higher is at your own risk. if nothing works,
 
 ## usage of service
 
-**javascript**
+**jquery**
+
+```javascript
+var request = require("request");
+
+var options = { method: 'GET',
+  url: 'https://circle-image-as-a-service-vyovctikeu.now.sh',
+  qs: { url: 'https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg' },
+  headers: { 'cache-control': 'no-cache' }
+};
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+
+  console.log(body);
+});
+
+```
+
+**node.js**
 
 ```javascript
 
@@ -40,9 +59,8 @@ Request({
 **curl**
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{
-  "url": "https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg"
-}' "https://circle-image-as-a-service-vyovctikeu.now.sh"
+
+curl -X GET -H "Cache-Control: no-cache" "http://localhost:8080/?url=https://cloud.githubusercontent.com/assets/3915598/20328161/04450b9c-ab35-11e6-9c4c-188c862573a7.jpg"
 
 ```
 
