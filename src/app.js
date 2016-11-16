@@ -1,15 +1,15 @@
 
 import path from 'path';
+import {
+  createWriteStream as writeFile,
+  unlink as deleteFile
+} from 'fs';
+
 import express from 'express';
 import request from 'request';
 import gm from 'gm';
 
 const app = express();
-
-const {
-  createWriteStream: writeFile,
-  unlink: deleteFile
-} = 'fs';
 
 const downloadDir = 'download';
 const tempDir = 'temp';
@@ -30,17 +30,17 @@ app.use('/',
     }
 
     // pattern match for filename including file type extension
-    const pattern = req.query.url.match(/([\w+.-]+)(\.\w+)$/);
+    const pattern = req.query.url.match(/([\w+\.\-]+)(\.\w+)$/);
 
     if (!pattern) {
       return res.status(422).send('no extension found in url');
     }
-
-    const [_, , filename, extension] = pattern;
+    console.log('pattern: ', pattern);
+    const [filename, _, extension] = pattern;
 
     // check if valid file type
     const validFileTypes = ['.jpg', '.gif', '.jpeg', '.png'];
-
+    console.log('extension: ', extension);
     if (!validFileTypes.includes(extension)) {
       return res.status(422).send('not a supported file type');
     }

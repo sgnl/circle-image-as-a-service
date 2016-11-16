@@ -933,6 +933,14 @@ babel-types@^6.13.0, babel-types@^6.16.0, babel-types@^6.18.0, babel-types@^6.7.
     lodash "^4.2.0"
     to-fast-properties "^1.0.1"
 
+babel-watch:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/babel-watch/-/babel-watch-2.0.3.tgz#39f5eac86dd6374010723784911f17695a665d53"
+  dependencies:
+    chokidar "^1.4.3"
+    commander "^2.9.0"
+    source-map-support "^0.4.0"
+
 babylon@^6.1.0, babylon@^6.11.0:
   version "6.13.1"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.13.1.tgz#adca350e088f0467647157652bafead6ddb8dfdb"
