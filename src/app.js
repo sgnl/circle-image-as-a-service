@@ -17,7 +17,6 @@ const uploadDir = 'uploads';
 const imageSizes = [120];
 
 app.get('/version', (_, res) => {
-  console.log('hit version route');
   res.send(`version: ${process.env.npm_package_version}`);
 });
 
@@ -37,12 +36,12 @@ app.use('/',
     if (!pattern) {
       return res.status(422).send('no extension found in url');
     }
-    console.log('pattern: ', pattern);
+
     const [filename, _, extension] = pattern;
 
     // check if valid file type
     const validFileTypes = ['.jpg', '.gif', '.jpeg', '.png'];
-    console.log('extension: ', extension);
+
     if (!validFileTypes.includes(extension)) {
       return res.status(422).send('not a supported file type');
     }
