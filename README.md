@@ -17,7 +17,7 @@ Powered by [now](https://zeit.co/now).
 ## caveats
 Only images 150x150 will work. Any higher is at your own risk. if nothing works, make an issue!
 
-## usage
+## usage of service
 
 **javascript**
 
@@ -45,3 +45,6 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' "https://circle-image-as-a-service-vyovctikeu.now.sh"
 
 ```
+
+## usage of this repo
+I dont know - clone it and host it for your private needs? :sparkles:
