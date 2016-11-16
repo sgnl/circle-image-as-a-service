@@ -22,11 +22,16 @@ App
 
 // validate payload
 .use((req, res, next) => {
+  // version
+  if (req.query.hasOwnProperty('version')) {
+    res.send(`version: ${process.env.npm_package_version}`)
+  }
 
   // check payload
   if (!req.query.url) {
     return res.status(422).send('missing url query parameter: url')
   }
+
 
   // pattern match for filename including file type extension
   let pattern = req.query.url.match(/([\w+\.\-]+)(\.\w+)$/)
@@ -85,7 +90,6 @@ App
   })
   .catch((error) => console.error(error))
 })
-
 .post('/', (req, res) => {
   res.send('although we\'ve come to the end of the road')
 })
