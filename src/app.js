@@ -14,7 +14,7 @@ const app = express();
 const downloadDir = 'download';
 const tempDir = 'temp';
 const uploadDir = 'uploads';
-const imageSizes = [120];
+const imageSizes = [75];
 
 app.get('/version', (_, res) => {
   res.send(`version: ${process.env.npm_package_version}`);
